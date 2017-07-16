@@ -3,6 +3,8 @@ MAINTAINER Ainy Min Email: ifool.me Website: http://ifool.me
 ENV REFRESHED_AT 2017-02-12
 
 RUN mkdir /root/fpm
+ADD localtime /etc/localtime
+ADD timezone /etc/timezone
 ADD php_install.sh /root/fpm/
 COPY src.tar.gz /root/fpm
 WORKDIR /root/fpm

@@ -218,6 +218,9 @@ sed -i 's/short_open_tag =.*/short_open_tag = On/g' /usr/local/php/etc/php.ini
 sed -i 's/;cgi.fix_pathinfo=.*/cgi.fix_pathinfo=0/g' /usr/local/php/etc/php.ini
 sed -i 's/max_execution_time =.*/max_execution_time = 300/g' /usr/local/php/etc/php.ini
 sed -i 's/disable_functions =.*/disable_functions = passthru,exec,system,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server/g' /usr/local/php/etc/php.ini
+
+sed -i '/^expose_php/c expose_php = Off' /usr/local/php/etc/php.ini
+
 #pear config-set php_ini /usr/local/php/etc/php.ini
 #pecl config-set php_ini /usr/local/php/etc/php.ini
 #curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -279,5 +282,5 @@ rm -rf /usr/local/src/*
 rm -rf *
 apt-get clean
 apt-get autoclean
-
+rm -f /var/cache/apt/archives/*.deb
 
