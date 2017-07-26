@@ -248,6 +248,52 @@ zend_loader.license_path=
 
 EOF
 
+
+# install php memcached extension
+cd /root
+wget -c http://memcached.org/files/memcached-1.4.39.tar.gz
+tar -zxvf memcached-1.4.39.tar.gz
+cd memcached-1.4.39
+./configure --prefix=/usr/local/memcached
+make
+make install
+
+cd /root
+wget -c https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
+tar -zxvf libmemcached-1.0.18.tar.gz
+cd libmemcached-1.0.18
+./configure --with-memcached=/usr/local/memcached/ --prefix=/usr/local/libmemcached
+make
+make install
+
+cd /root
+wget -c http://pecl.php.net/get/memcached-2.2.0.tgz
+tar -xvf memcached-2.2.0.tgz
+cd memcached-2.2.0
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config --with-libmemcached-dir=/usr/local/libmemcached/
+make
+make install
+sed -i '$a\extension = memcached.so' /usr/local/php/etc/php.ini
+rm -rf /usr/local/memcached
+
+# install php redis extension
+cd /root
+wget http://pecl.php.net/get/redis-2.2.8.tgz
+tar -xvf redis-2.2.8.tgz
+cd redis-2.2.8
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config
+make
+make install
+sed -i '$a\extension = redis.so' /usr/local/php/etc/php.ini
+
+cd /root
+rm -rf libmemcached*
+rm -rf memcached*
+rm -rf redis*
+
+
 cat >/usr/local/php/etc/php-fpm.conf<<EOF
 [global]
 pid = /usr/local/php/var/run/php-fpm.pid
@@ -270,7 +316,7 @@ pm.min_spare_servers = 1
 pm.max_spare_servers = 6
 request_terminate_timeout = 100
 request_slowlog_timeout = 0
-slowlog = var/log/slow.log
+slowlog = /var/log/slow.log
 EOF
 
 echo "Copy php-fpm init.d file..."
